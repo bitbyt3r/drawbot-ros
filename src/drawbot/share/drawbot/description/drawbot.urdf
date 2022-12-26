@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot name="drawbot" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:property name="body_width" value=".1550"/>
+    <xacro:property name="body_length" value=".2000"/>
+    <xacro:property name="body_height" value=".0950"/>
+
+    <xacro:property name="wheel_radius" value=".0390"/>
+    <xacro:property name="wheel_width" value=".0370"/>
+    <xacro:property name="wheel_ygap" value=".0150"/>
+    <xacro:property name="wheel_xdist" value=".0980"/>
+
+
+    <link name="base_link" />
+
+    <link name="body_link">
+        <visual>
+            <geometry>
+                <box size="${body_length} ${body_width} ${body_height}"/>
+            </geometry>
+            <material name="Cyan">
+                <color rgba="0 1.0 1.0 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name="body_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="body_link"/>
+        <origin xyz="0.0 0.0 ${wheel_radius + body_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+        <link name="${prefix}_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+                </geometry>
+                <material name="Gray">
+                    <color rgba="0.5 0.5 0.5 1.0"/>
+                </material>
+            </visual>
+        </link>
+
+        <joint name="${prefix}_joint" type="continuous">
+            <parent link="body_link"/>
+            <child link="${prefix}_link"/>
+            <origin xyz="${x_reflect*(wheel_xdist/2)} ${y_reflect*(body_width/2+wheel_ygap+wheel_width/2)} ${-body_height/2}" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:wheel prefix="wheel_fr" x_reflect="1"  y_reflect="1"/>
+    <xacro:wheel prefix="wheel_fl" x_reflect="-1" y_reflect="1"/>
+    <xacro:wheel prefix="wheel_rl" x_reflect="-1" y_reflect="-1"/>
+    <xacro:wheel prefix="wheel_rr" x_reflect="1"  y_reflect="-1"/>
+
+    <link name="imu_link"/>
+    <joint name="imu_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="imu_link"/>
+        <origin xyz="-.0180 0.0 ${body_height/2 + .0360}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="camera_link"/>
+    <joint name="camera_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="camera_link"/>
+        <origin xyz="${.090 - body_length/2} ${body_width/2 - .0235} ${body_height/2 + .0230}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="uwb_right_link"/>
+    <joint name="uwb_right_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="uwb_right_link"/>
+        <origin xyz="${body_length/2 - .033} ${body_width/2 + .015} ${body_height/2 + .044}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="uwb_left_link"/>
+    <joint name="uwb_left_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="uwb_left_link"/>
+        <origin xyz="${.033 - body_length/2} ${.015 - body_width/2} ${body_height/2 + .044}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="chalk_link"/>
+    <joint name="chalk_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="chalk_link"/>
+        <origin xyz="${-body_length/2 - .100} 0 ${-body_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="lidar_link"/>
+    <joint name="lidar_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="lidar_link"/>
+        <origin xyz="${.090 - body_length/2} 0 ${body_height/2 - .040}" rpy="0 0 0"/>
+    </joint>
+</robot>

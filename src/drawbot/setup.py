@@ -9,6 +9,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/drawbot/launch/', ['share/drawbot/launch/drawbot.py']),
+        ('share/drawbot/description/', ['share/drawbot/description/drawbot.urdf'])
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -19,7 +21,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'motors = drawbot.motors:main'
+            'motors = drawbot.motors:main',
+            'uwb = drawbot.uwb:main',
         ],
     },
 )

@@ -16,12 +16,12 @@ class WheelEncoder(Node):
             namespace='',
             parameters=[
                 ('odom_frame', 'odom'),
-                ('odom_topic', 'wheel/odometry'),
-                ('base_frame', 'base_footprint'),
+                ('topic', 'drawbot/encoders/odom'),
+                ('base_frame', 'base_link'),
             ]
         )
 
-        self.odompub = self.create_publisher(Odometry, self.get_parameter('odom_topic').value, 1)
+        self.odompub = self.create_publisher(Odometry, self.get_parameter('topic').value, 1)
 
         self.position = np.array([0, 0])
         self.velocity = np.array([0, 0])
